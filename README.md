@@ -57,3 +57,397 @@ const provider = new GoogleAuthProvider();
 export { auth, provider };
 
 
+
+// import {
+//   Calendar,
+//   Inbox,
+//   Search,
+//   Settings,
+//   LogOut,
+//   CircleUserRound,
+//   LayoutDashboard,
+// } from "lucide-react";
+// import { signOut } from "firebase/auth";
+// import { auth } from "@/lib/firebase";
+// import { useRouter } from "next/navigation";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Separator } from "@/components/ui/separator";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
+// import {
+//   Sidebar,
+//   SidebarContent,
+//   SidebarGroup,
+//   SidebarGroupContent,
+//   SidebarGroupLabel,
+//   SidebarMenu,
+//   SidebarMenuButton,
+//   SidebarMenuItem,
+//   SidebarHeader,
+//   SidebarFooter,
+// } from "@/components/ui/sidebar";
+
+// interface SidebarTriggerProps {
+//   user: {
+//     displayName: string | null;
+//     email: string | null;
+//     photoURL?: string | null;
+//   };
+// }
+
+// // Menu items.
+// const items = [
+//   {
+//     title: "Dashboard",
+//     url: "/",
+//     icon: LayoutDashboard,
+//   },
+//   {
+//     title: "Inbox",
+//     url: "#",
+//     icon: Inbox,
+//   },
+//   {
+//     title: "Calendar",
+//     url: "#",
+//     icon: Calendar,
+//   },
+//   {
+//     title: "Search",
+//     url: "#",
+//     icon: Search,
+//   },
+//   {
+//     title: "Settings",
+//     url: "#",
+//     icon: Settings,
+//   },
+// ];
+
+// export function AppSidebar({ user }: SidebarTriggerProps) {
+//   const router = useRouter();
+
+//   const handleSignOut = async () => {
+//     await signOut(auth);
+//     router.push("/login");
+//   };
+
+//   return (
+//     <Sidebar className="select-none border-none">
+//       <SidebarHeader>
+//         <SidebarMenu>
+//           <SidebarMenuItem>
+//             <Popover>
+//               <PopoverTrigger asChild>
+//                 <div className="flex items-center gap-2 rounded-md p-2 transition-colors data-[state=open]:bg-muted cursor-pointer">
+//                   <Avatar>
+//                     <AvatarImage
+//                       src={user.photoURL || "https://github.com/shadcn.png"}
+//                     />
+//                     <AvatarFallback>
+//                       {user.displayName?.[0] ?? "?"}
+//                     </AvatarFallback>
+//                   </Avatar>
+//                   <div className="text-left hidden sm:block">
+//                     <p className="font-semibold text-sm">{user.displayName}</p>
+//                   </div>
+//                 </div>
+//               </PopoverTrigger>
+//               <PopoverContent side="right" className="p-0 mt-2">
+//                 <SidebarGroupContent className="py-2 px-1">
+//                   <SidebarGroupLabel>Application</SidebarGroupLabel>
+//                   <SidebarMenu>
+//                     <SidebarMenuItem>
+//                       <SidebarMenuButton className="py-5 border-none ring-0 outline-none focus:ring-0 focus:outline-none focus-visible:ring-0 data-[state=active]:bg-transparent">
+//                         <CircleUserRound />
+//                         <span className="p-1">Account</span>
+//                       </SidebarMenuButton>
+
+//                       <SidebarMenuButton
+//                         onClick={handleSignOut}
+//                         className="py-5 border-none ring-0 outline-none focus:ring-0 focus:outline-none focus-visible:ring-0 data-[state=active]:bg-transparent"
+//                       >
+//                         <LogOut />
+//                         <span className="p-1">Sign out</span>
+//                       </SidebarMenuButton>
+//                     </SidebarMenuItem>
+//                   </SidebarMenu>
+//                 </SidebarGroupContent>
+//               </PopoverContent>
+//             </Popover>
+//           </SidebarMenuItem>
+//         </SidebarMenu>
+//       </SidebarHeader>
+
+//       <SidebarContent>
+//         <SidebarGroup>
+//           <SidebarGroupLabel>Application</SidebarGroupLabel>
+//           <SidebarGroupContent>
+//             <SidebarMenu>
+//               {items.map((item) => (
+//                 <SidebarMenuItem key={item.title}>
+//                   <SidebarMenuButton asChild>
+//                     <a href={item.url}>
+//                       <item.icon />
+//                       <span>{item.title}</span>
+//                     </a>
+//                   </SidebarMenuButton>
+//                 </SidebarMenuItem>
+//               ))}
+//             </SidebarMenu>
+//           </SidebarGroupContent>
+//         </SidebarGroup>
+//       </SidebarContent>
+
+//       <SidebarFooter>
+//         <SidebarMenu>
+//           <SidebarMenuItem>
+//             <Popover>
+//               <PopoverTrigger asChild>
+//                 <div className="flex items-center gap-2 rounded-md p-2 transition-colors data-[state=open]:bg-muted cursor-pointer">
+//                   <Avatar>
+//                     <AvatarImage
+//                       src={user.photoURL || "https://github.com/shadcn.png"}
+//                     />
+//                     <AvatarFallback>
+//                       {user.displayName?.[0] ?? "?"}
+//                     </AvatarFallback>
+//                   </Avatar>
+//                   <div className="text-left hidden sm:block">
+//                     <p className="font-semibold text-sm">{user.displayName}</p>
+//                     <p className="text-muted-foreground text-xs">
+//                       {user.email}
+//                     </p>
+//                   </div>
+//                 </div>
+//               </PopoverTrigger>
+//               <PopoverContent side="right" className="p-0 mb-2">
+//                 <div className="flex items-center gap-2 m-2">
+//                   <Avatar className="rounded-lg w-10 h-10">
+//                     <AvatarImage
+//                       src={user.photoURL || "https://github.com/shadcn.png"}
+//                     />
+//                     <AvatarFallback>
+//                       {user.displayName?.[0] ?? "?"}
+//                     </AvatarFallback>
+//                   </Avatar>
+//                   <div className="text-left hidden sm:block">
+//                     <p className="font-semibold text-sm">{user.displayName}</p>
+//                     <p className="text-muted-foreground text-xs">
+//                       {user.email}
+//                     </p>
+//                   </div>
+//                 </div>
+//                 <Separator />
+
+//                 <SidebarGroupContent className="py-2 px-1">
+//                   <SidebarMenu>
+//                     <SidebarMenuItem>
+//                       <SidebarMenuButton className="py-5 border-none ring-0 outline-none focus:ring-0 focus:outline-none focus-visible:ring-0 data-[state=active]:bg-transparent">
+//                         <CircleUserRound />
+//                         <span className="p-1">Account</span>
+//                       </SidebarMenuButton>
+
+//                       <SidebarMenuButton
+//                         onClick={handleSignOut}
+//                         className="py-5 border-none ring-0 outline-none focus:ring-0 focus:outline-none focus-visible:ring-0 data-[state=active]:bg-transparent"
+//                       >
+//                         <LogOut />
+//                         <span className="p-1">Sign out</span>
+//                       </SidebarMenuButton>
+//                     </SidebarMenuItem>
+//                   </SidebarMenu>
+//                 </SidebarGroupContent>
+//               </PopoverContent>
+//             </Popover>
+//           </SidebarMenuItem>
+//         </SidebarMenu>
+//       </SidebarFooter>
+//     </Sidebar>
+//   );
+// }
+
+"use client"
+
+import * as React from "react"
+import {
+  IconCamera,
+  IconChartBar,
+  IconDashboard,
+  IconDatabase,
+  IconFileAi,
+  IconFileDescription,
+  IconFileWord,
+  IconFolder,
+  IconHelp,
+  IconInnerShadowTop,
+  IconListDetails,
+  IconReport,
+  IconSearch,
+  IconSettings,
+  IconUsers,
+} from "@tabler/icons-react"
+
+import { NavDocuments } from "@/components/nav-documents"
+import { NavMain } from "@/components/nav-main"
+import { NavSecondary } from "@/components/nav-secondary"
+import { NavUser } from "@/components/nav-user"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
+
+const data = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "#",
+      icon: IconDashboard,
+    },
+    {
+      title: "Lifecycle",
+      url: "#",
+      icon: IconListDetails,
+    },
+    {
+      title: "Analytics",
+      url: "#",
+      icon: IconChartBar,
+    },
+    {
+      title: "Projects",
+      url: "#",
+      icon: IconFolder,
+    },
+    {
+      title: "Team",
+      url: "#",
+      icon: IconUsers,
+    },
+  ],
+  navClouds: [
+    {
+      title: "Capture",
+      icon: IconCamera,
+      isActive: true,
+      url: "#",
+      items: [
+        {
+          title: "Active Proposals",
+          url: "#",
+        },
+        {
+          title: "Archived",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Proposal",
+      icon: IconFileDescription,
+      url: "#",
+      items: [
+        {
+          title: "Active Proposals",
+          url: "#",
+        },
+        {
+          title: "Archived",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Prompts",
+      icon: IconFileAi,
+      url: "#",
+      items: [
+        {
+          title: "Active Proposals",
+          url: "#",
+        },
+        {
+          title: "Archived",
+          url: "#",
+        },
+      ],
+    },
+  ],
+  navSecondary: [
+    {
+      title: "Settings",
+      url: "#",
+      icon: IconSettings,
+    },
+    {
+      title: "Get Help",
+      url: "#",
+      icon: IconHelp,
+    },
+    {
+      title: "Search",
+      url: "#",
+      icon: IconSearch,
+    },
+  ],
+  documents: [
+    {
+      name: "Data Library",
+      url: "#",
+      icon: IconDatabase,
+    },
+    {
+      name: "Reports",
+      url: "#",
+      icon: IconReport,
+    },
+    {
+      name: "Word Assistant",
+      url: "#",
+      icon: IconFileWord,
+    },
+  ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar collapsible="offcanvas" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:!p-1.5"
+            >
+              <a href="#">
+                <IconInnerShadowTop className="!size-5" />
+                <span className="text-base font-semibold">Acme Inc.</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={data.navMain} />
+        <NavDocuments items={data.documents} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
+    </Sidebar>
+  )
+}

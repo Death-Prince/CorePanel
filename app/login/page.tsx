@@ -1,42 +1,68 @@
 // app/login/page.tsx
+
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { auth, provider } from "@/lib/firebase";
-import { signInWithPopup } from "firebase/auth";
-import { useState } from "react";
-import { GoogleAuthProvider } from "firebase/auth";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LoginPage() {
-  const [user, setUser] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+
+    // If already logged in, redirect to home
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push("/");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       const result = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
       const user = result.user;
-      setUser(user);
       console.log("User Info:", user);
+      router.push("/"); //
     } catch (error: any) {
       console.error("Login Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center space-y-6">
-        <h1 className="text-3xl font-bold">Welcome to CorePanel</h1>
-        <button onClick={handleLogin} className="w-60">
-          Sign in with Google
-        </button>
+  if (!mounted) return null;
 
-        {user && (
-          <div className="mt-4">
-            <p>Welcome, {user.displayName}</p>
-            <p className="text-sm text-gray-500">{user.email}</p>
-          </div>
-        )}
-      </div>
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-background p-4">
+      <Card className="w-full max-w-sm shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-2xl text-center">
+            Login to CorePanel
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center space-y-4">
+          <Button onClick={handleLogin} className="w-full">
+            {isLoading ? "Signing in..." : "Sign in with Google"}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
