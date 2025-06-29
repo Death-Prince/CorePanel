@@ -106,7 +106,6 @@ const data = {
       icon: IconSearch,
     },
   ],
- 
 };
 
 export function AppSidebar({
@@ -115,7 +114,6 @@ export function AppSidebar({
 }: NavUserProps & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -138,9 +136,14 @@ export function AppSidebar({
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser
+          user={{
+            displayName: user.displayName ?? "",
+            email: user.email ?? "",
+            photoURL: user.photoURL ?? "",
+          }}
+        />
       </SidebarFooter>
-
     </Sidebar>
   );
 }
