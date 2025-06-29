@@ -1,5 +1,4 @@
 // app/login/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -36,7 +35,7 @@ export default function LoginPage() {
     try {
       const result = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
+      // const token = credential?.accessToken;
       const user = result.user;
       console.log("User Info:", user);
       router.push("/"); //
