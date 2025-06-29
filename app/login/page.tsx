@@ -34,13 +34,15 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const result = await signInWithPopup(auth, provider);
-      // const credential = GoogleAuthProvider.credentialFromResult(result);
-      // const token = credential?.accessToken;
       const user = result.user;
       console.log("User Info:", user);
-      router.push("/"); //
-    } catch (error: any) {
-      console.error("Login Error:", error);
+      router.push("/");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Login Error:", error.message);
+      } else {
+        console.error("Unknown Login Error:", error);
+      }
     } finally {
       setIsLoading(false);
     }
