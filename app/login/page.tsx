@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { auth, provider } from "@/lib/firebase";
 import {
   signInWithPopup,
-  GoogleAuthProvider,
+  // GoogleAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth";
 import { Button } from "@/components/ui/button";
