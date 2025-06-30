@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 
 const allowedEmails = ["nagaljohnllenard@gmail.com", "bondoymonica@gmail.com"];
 
@@ -60,8 +61,9 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-background p-4">
       <Card className="w-full max-w-sm shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">
-            Login to CorePanel
+          <CardTitle className="text-2xl text-center flex flex-col items-center gap-2">
+            <Image src="/favico.svg" alt="CorePanel Logo" width={48} height={48} className="mx-auto" />
+            Welcome to CorePanel
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center space-y-4">
