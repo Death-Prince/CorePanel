@@ -5,12 +5,16 @@ import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table";
+import {schema} from "@/lib/schema"
+import type { z } from "zod";
+
+type StackItem = z.infer<typeof schema>;
 
 export default function StackShelf() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  const [rawData, setData] = useState<any[]>([]);
+  const [rawData, setData] = useState<StackItem[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
@@ -20,7 +24,7 @@ export default function StackShelf() {
         const json = await res.json();
 
         if (json.success) {
-          setData(json.data); 
+          setData(json.data);
         } else {
           console.error("API error:", json.error);
         }

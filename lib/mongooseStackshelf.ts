@@ -6,7 +6,10 @@ if (!MONGODB_URI) {
   throw new Error("Missing MONGODB_STACKSHELF_URI");
 }
 
-let cached = (global as any).mongooseStackshelf || { conn: null, promise: null };
+const cached = global.mongooseStackshelf || {
+  conn: null as mongoose.Connection | null,
+  promise: null as Promise<mongoose.Connection> | null,
+};
 
 export async function connectStackshelfDB() {
   if (cached.conn) return cached.conn;
@@ -18,6 +21,7 @@ export async function connectStackshelfDB() {
   }
 
   cached.conn = await cached.promise;
-  (global as any).mongooseStackshelf = cached;
+  global.mongooseStackshelf = cached;
+
   return cached.conn;
 }

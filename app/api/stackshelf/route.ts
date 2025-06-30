@@ -8,7 +8,10 @@ export async function GET() {
     const items = await StackItem.find();
     return NextResponse.json({ success: true, data: items });
   } catch (err) {
-    return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: err instanceof Error ? err.message : String(err) },
+      { status: 500 }
+    );
   }
 }
 
