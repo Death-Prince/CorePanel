@@ -1,21 +1,16 @@
+//components/app-sidebar
 "use client";
 
 import * as React from "react";
-import {
-  // IconCamera,
-  IconDashboard,
-  // IconFileAi,
-  // IconFileDescription,
-  IconHelp,
-  IconInnerShadowTop,
-  IconSearch,
-  IconSettings,
-} from "@tabler/icons-react";
-import { Box } from 'lucide-react';
-
+import { IconInnerShadowTop } from "@tabler/icons-react";
+import { navMain, navSecondary } from "@/config/nav";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
+import useAuth from "@/hooks/useAuth";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import {
   Sidebar,
   SidebarContent,
@@ -26,98 +21,18 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-interface NavUserProps {
-  user: {
-    displayName: string | null;
-    email: string | null;
-    photoURL: string | null;
-  };
-}
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: IconDashboard,
-    },
-    {
-      title: "Stack Shelf",
-      url: "./stackshelf",
-      icon: Box,
-    },
-  ],
-  // navClouds: [
-  //   {
-  //     title: "Capture",
-  //     icon: IconCamera,
-  //     isActive: true,
-  //     url: "#",
-  //     items: [
-  //       {
-  //         title: "Active Proposals",
-  //         url: "#",
-  //       },
-  //       {
-  //         title: "Archived",
-  //         url: "#",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: "Proposal",
-  //     icon: IconFileDescription,
-  //     url: "#",
-  //     items: [
-  //       {
-  //         title: "Active Proposals",
-  //         url: "#",
-  //       },
-  //       {
-  //         title: "Archived",
-  //         url: "#",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: "Prompts",
-  //     icon: IconFileAi,
-  //     url: "#",
-  //     items: [
-  //       {
-  //         title: "Active Proposals",
-  //         url: "#",
-  //       },
-  //       {
-  //         title: "Archived",
-  //         url: "#",
-  //       },
-  //     ],
-  //   },
-  // ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-};
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
 
-export function AppSidebar({
-  user,
-  ...props
-}: NavUserProps & React.ComponentProps<typeof Sidebar>) {
+  if (loading || !user) return null;
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -137,13 +52,13 @@ export function AppSidebar({
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
 
       <SidebarFooter>
         <NavUser
-          user={{
+           user={{
             displayName: user.displayName ?? "",
             email: user.email ?? "",
             photoURL: user.photoURL ?? "",
