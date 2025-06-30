@@ -1,6 +1,6 @@
 "use client";
 
-import { IconCirclePlusFilled, IconMail} from "@tabler/icons-react";
+import { IconCirclePlusFilled, IconMail } from "@tabler/icons-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 export function NavMain({
   items,
@@ -20,6 +22,8 @@ export function NavMain({
     icon?: React.ElementType;
   }[];
 }) {
+  const pathname = usePathname();
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -42,17 +46,30 @@ export function NavMain({
             </Button>
           </SidebarMenuItem>
         </SidebarMenu>
+
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <Link href={item.url}>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) => {
+            const isActive = pathname === item.url;
+
+            return (
+              <SidebarMenuItem key={item.title}>
+                <Link href={item.url}>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    className={clsx(
+                      "w-full justify-start",
+                      isActive
+                        ? "bg-muted text-primary font-semibold"
+                        : "hover:bg-muted/70 text-muted-foreground"
+                    )}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
