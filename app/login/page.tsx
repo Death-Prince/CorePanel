@@ -1,29 +1,34 @@
-// app/login/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { auth, provider } from "@/lib/firebase";
 import {
   signInWithPopup,
-  // GoogleAuthProvider,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const allowedEmails = ["nagaljohnllenard@gmail.com", "bondoymonica@gmail.com"];
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams(); 
+  const unauthorized = searchParams.get("unauthorized") === "true";
 
   useEffect(() => {
     setMounted(true);
 
-    // If already logged in, redirect to home
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user && allowedEmails.includes(user.email ?? "")) {
         router.push("/");
+      } else if (user) {
+        await signOut(auth);
+        router.push("/login?unauthorized=true");
       }
     });
 
@@ -35,14 +40,15 @@ export default function LoginPage() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log("User Info:", user);
-      router.push("/");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Login Error:", error.message);
+
+      if (allowedEmails.includes(user.email ?? "")) {
+        router.push("/");
       } else {
-        console.error("Unknown Login Error:", error);
+        await signOut(auth);
+        router.push("/login?unauthorized=true");
       }
+    } catch (error: unknown) {
+      console.error("Login Error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -62,6 +68,12 @@ export default function LoginPage() {
           <Button onClick={handleLogin} className="w-full">
             {isLoading ? "Signing in..." : "Sign in with Google"}
           </Button>
+
+          {unauthorized && (
+            <p className="text-red-500 text-sm text-center">
+              Unauthorized user. Access denied.
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>
