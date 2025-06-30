@@ -11,8 +11,6 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 // import { ModeToggle } from "@/components/theme/ModeToggle";
 
-import data from "./data.json";
-
 export default function HomePage() {
   const router = useRouter();
   const { user, loading } = useAuth();
