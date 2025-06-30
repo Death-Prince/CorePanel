@@ -1,8 +1,8 @@
 // models/StackItem.ts
 import { connectStackshelfDB } from "@/lib/mongooseStackshelf";
-import mongoose from "mongoose";
+import { Schema } from "mongoose"; 
 
-const StackItemSchema = new mongoose.Schema(
+const StackItemSchema = new Schema(
   {
     category_name: String,
     site_name: String,

@@ -1,24 +1,46 @@
-// app/page.tsx
+// app/stackshelf/page.tsx
 
 "use client";
 
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table";
 // import { ModeToggle } from "@/components/theme/ModeToggle";
-
-import data from "./data.json";
 
 export default function StackShelf() {
   const router = useRouter();
   const { user, loading } = useAuth();
+
+  const [data, setData] = useState<any[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
     }
   }, [user, loading, router]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/stackshelf");
+        const json = await res.json();
+
+        if (json.success) {
+          setData(json.data);
+        } else {
+          console.error("API error:", json.error);
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+      } finally {
+        setLoadingData(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   if (loading || !user) return null;
 
