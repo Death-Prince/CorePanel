@@ -95,19 +95,21 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const schema = z.object({
-    _id: z.string(),
-    category_name: z.string(),
-    site_link: z.string(),
-    site_image: z.string(),
-    site_name: z.string(),
-    access_category: z.string(),
-    ribon_style: z.string(),
-    ribon_color: z.string(),
-    ribon_tooltip: z.string(),
+  id: z.number(),
+  category_name: z.string(),
+  site_link: z.string(),
+  site_image: z.string(),
+  site_name: z.string(),
+  access_category: z.string(),
+  ribon_style: z.string(),
+  ribon_color: z.string(),
+  ribon_tooltip: z.string(),
 });
 
-function DragHandle({ id }: { id: UniqueIdentifier }) {
-  const { attributes, listeners } = useSortable({ id });
+function DragHandle({ id }: { id: number }) {
+  const { attributes, listeners } = useSortable({
+    id,
+  });
 
   return (
     <Button
@@ -127,7 +129,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     id: "drag",
     header: () => null,
-    cell: ({ row }) => <DragHandle id={row.original._id} />,
+    cell: ({ row }) => <DragHandle id={row.original.id} />,
   },
   {
     id: "select",
@@ -156,18 +158,18 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "site_name",
+    accessorKey: "Name",
     header: "Name",
     cell: ({ row }) => {
-      return <TableCellViewer item={row.original.site_name} />;
+      return <TableCellViewer item={row.original} />;
     },
     enableHiding: false,
   },
   {
-    accessorKey: "category_name",
+    accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-      <div className="w-32">
+      <div className="w-5">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
           {row.original.category_name}
         </Badge>
@@ -175,10 +177,50 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "site_link",
+    accessorKey: "access_category",
+    header: "Access",
+    cell: ({ row }) => {
+      const svgHtml = row.original.access_category;
+
+      return (
+        <div
+          className="w-8 h-8 text-right "
+          dangerouslySetInnerHTML={{ __html: svgHtml }}
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "Description",
+    header: "Description",
+    cell: ({ row }) => (
+      <div className="w-32">
+        <Badge variant="secondary" className="text-muted-foreground px-1.5">
+          {row.original.ribon_tooltip}
+        </Badge>
+      </div>
+    ),
+  },
+  // {
+  //   accessorKey: "status",
+  //   header: "Status",
+  //   cell: ({ row }) => (
+  //     <Badge variant="outline" className="text-muted-foreground px-1.5">
+  //       {row.original.status === "Done" ? (
+  //         <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
+  //       ) : (
+  //         <IconLoader />
+  //       )}
+  //       {row.original.status}
+  //     </Badge>
+  //   ),
+  // },
+  {
+    accessorKey: "Link",
     header: "Link",
     cell: ({ row }) => {
       const url = row.original.site_link;
+
       return (
         <div className="w-32">
           <a
@@ -219,10 +261,9 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
 ];
 
-
 function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
-    id: row.original._id,
+    id: row.original.id,
   });
 
   return (
@@ -270,7 +311,7 @@ export function DataTable({
   );
 
   const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => data?.map(({ _id }) => _id) || [],
+    () => data?.map(({ id }) => id) || [],
     [data]
   );
 
@@ -284,7 +325,7 @@ export function DataTable({
       columnFilters,
       pagination,
     },
-    getRowId: (row) => row._id.toString(),
+    getRowId: (row) => row.id.toString(),
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -380,7 +421,7 @@ export function DataTable({
           </DropdownMenu>
           <Button variant="outline" size="sm">
             <IconPlus />
-            <span className="hidden lg:inline">Add Section</span>
+            <span className="hidden lg:inline">Add New Site</span>
           </Button>
         </div>
       </div>
@@ -545,34 +586,83 @@ const chartData = [
   { month: "June", desktop: 214, mobile: 140 },
 ];
 
-function TableCellViewer({ item }: { item: string }) {
+function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
   const isMobile = useIsMobile();
 
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
-          {item}
+          {item.site_name}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="gap-1">
-          <DrawerTitle>{item}</DrawerTitle>
-          <DrawerDescription>
-            Showing details about: <strong>{item}</strong>
-          </DrawerDescription>
+          <DrawerTitle>{item.site_name}</DrawerTitle>
+          <DrawerDescription>{item.ribon_tooltip}</DrawerDescription>
         </DrawerHeader>
-        <div className="px-4 py-6 text-sm">
-          You can extend this drawer to show more info related to <b>{item}</b>.
+        <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
+          <form className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="header">Site Name</Label>
+              <Input id="header" defaultValue={item.site_name} />
+            </div>
+            {/* <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="type">Type</Label>
+                <Select defaultValue={item.type}>
+                  <SelectTrigger id="type" className="w-full">
+                    <SelectValue placeholder="Select a type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Table of Contents">
+                      Table of Contents
+                    </SelectItem>
+                    <SelectItem value="Executive Summary">
+                      Executive Summary
+                    </SelectItem>
+                    <SelectItem value="Technical Approach">
+                      Technical Approach
+                    </SelectItem>
+                    <SelectItem value="Design">Design</SelectItem>
+                    <SelectItem value="Capabilities">Capabilities</SelectItem>
+                    <SelectItem value="Focus Documents">
+                      Focus Documents
+                    </SelectItem>
+                    <SelectItem value="Narrative">Narrative</SelectItem>
+                    <SelectItem value="Cover Page">Cover Page</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="status">Status</Label>
+                <Select defaultValue={item.status}>
+                  <SelectTrigger id="status" className="w-full">
+                    <SelectValue placeholder="Select a status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Done">Done</SelectItem>
+                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="Not Started">Not Started</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div> */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="target">URL</Label>
+                <Input id="target" defaultValue={item.site_link} />
+              </div>
+            </div>
+          </form>
         </div>
         <DrawerFooter>
-          <Button>Save</Button>
+          <Button>Submit</Button>
           <DrawerClose asChild>
-            <Button variant="outline">Close</Button>
+            <Button variant="outline">Done</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
 }
-

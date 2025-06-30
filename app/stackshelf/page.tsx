@@ -1,25 +1,17 @@
 // app/stackshelf/page.tsx
-
 "use client";
 
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/data-table";
-// import { ModeToggle } from "@/components/theme/ModeToggle";
 
 export default function StackShelf() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  const [data, setData] = useState<any[]>([]);
+  const [rawData, setData] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
-    }
-  }, [user, loading, router]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +20,7 @@ export default function StackShelf() {
         const json = await res.json();
 
         if (json.success) {
-          setData(json.data);
+          setData(json.data); 
         } else {
           console.error("API error:", json.error);
         }
@@ -42,7 +34,18 @@ export default function StackShelf() {
     fetchData();
   }, []);
 
-  if (loading || !user) return null;
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user || loadingData) return null;
+
+  const data = rawData.map(({ _id, ...rest }) => ({
+    id: _id,
+    ...rest,
+  }));
 
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">
