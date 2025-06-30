@@ -11,6 +11,7 @@ import {
   IconSearch,
   IconSettings,
 } from "@tabler/icons-react";
+import { Box } from 'lucide-react';
 
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -37,58 +38,63 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/",
       icon: IconDashboard,
     },
-  ],
-  navClouds: [
     {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
+      title: "Stack Shelf",
+      url: "./stackshelf",
+      icon: Box,
     },
   ],
+  // navClouds: [
+  //   {
+  //     title: "Capture",
+  //     icon: IconCamera,
+  //     isActive: true,
+  //     url: "#",
+  //     items: [
+  //       {
+  //         title: "Active Proposals",
+  //         url: "#",
+  //       },
+  //       {
+  //         title: "Archived",
+  //         url: "#",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Proposal",
+  //     icon: IconFileDescription,
+  //     url: "#",
+  //     items: [
+  //       {
+  //         title: "Active Proposals",
+  //         url: "#",
+  //       },
+  //       {
+  //         title: "Archived",
+  //         url: "#",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Prompts",
+  //     icon: IconFileAi,
+  //     url: "#",
+  //     items: [
+  //       {
+  //         title: "Active Proposals",
+  //         url: "#",
+  //       },
+  //       {
+  //         title: "Archived",
+  //         url: "#",
+  //       },
+  //     ],
+  //   },
+  // ],
   navSecondary: [
     {
       title: "Settings",

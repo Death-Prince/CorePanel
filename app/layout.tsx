@@ -7,6 +7,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 export const metadata: Metadata = {
   title: "CorePanel",
   description: "Login page",
+  icons: {
+    icon: "/favico.svg",
+  },
 };
 
 export default function RootLayout({
