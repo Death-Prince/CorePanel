@@ -17,20 +17,23 @@ import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react";
 import { toast } from "sonner";
 
+type SiteFormValues = {
+  site_name: string;
+  site_link: string;
+  ribon_tooltip: string;
+  category_name?: string;
+  site_image?: string;
+  access_category?: string;
+  ribon_style?: string;
+  ribon_color?: string;
+};
+
+
 interface SiteDialogProps {
   children: React.ReactNode;
   mode: "add" | "edit";
-  initialValues?: {
-    site_name: string;
-    site_link: string;
-    ribon_tooltip: string;
-    category_name?: string;
-    site_image?: string;
-    access_category?: string;
-    ribon_style?: string;
-    ribon_color?: string;
-  };
-  onSubmit: (values: any) => void;
+  initialValues?: SiteFormValues;
+  onSubmit: (values: SiteFormValues) => void;
 }
 
 export function SiteDialog({
