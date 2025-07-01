@@ -13,26 +13,18 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { z } from "zod";
+import { schema } from "@/components/data-table";
 
-type SiteFormValues = {
-  site_name: string;
-  site_link: string;
-  ribon_tooltip: string;
-  category_name?: string;
-  site_image?: string;
-  access_category?: string;
-  ribon_style?: string;
-  ribon_color?: string;
-};
-
+type SiteFormValues = z.infer<typeof schema>;
 
 interface SiteDialogProps {
   children: React.ReactNode;
   mode: "add" | "edit";
-  initialValues?: SiteFormValues;
+  initialValues?: Partial<SiteFormValues>;
   onSubmit: (values: SiteFormValues) => void;
 }
 
@@ -188,7 +180,7 @@ export function SiteDialog({
               <Label htmlFor="accessCategory">
                 Access Category (SVG or text)
               </Label>
-              <Textarea 
+              <Textarea
                 id="accessCategory"
                 value={accessCategory}
                 onChange={(e) => setAccessCategory(e.target.value)}
@@ -207,7 +199,7 @@ export function SiteDialog({
 
             <div className="grid gap-2">
               <Label htmlFor="tooltip">Tooltip Description</Label>
-              <Textarea 
+              <Textarea
                 id="tooltip"
                 value={tooltip}
                 onChange={(e) => setTooltip(e.target.value)}
