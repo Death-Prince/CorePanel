@@ -11,13 +11,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import type { z } from "zod";
+import { Badge } from "@/components/ui/badge";
 import { schema } from "@/components/data-table";
+// import { Select } from "@radix-ui/react-select";
 
 type SiteFormValues = z.infer<typeof schema>;
 
@@ -56,6 +65,26 @@ export function SiteDialog({
 
   const isEdit = mode === "edit";
   const [open, setOpen] = useState(false);
+
+  const [isInvalidLink, setIsInvalidLink] = useState(false);
+
+  useEffect(() => {
+    if (!siteLink) {
+      setIsInvalidLink(false);
+      return;
+    }
+
+    try {
+      const url = new URL(siteLink);
+      const domain = url.hostname;
+
+      const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
+      setImage(faviconUrl);
+      setIsInvalidLink(false);
+    } catch (error) {
+      setIsInvalidLink(true);
+    }
+  }, [siteLink]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -126,6 +155,16 @@ export function SiteDialog({
             </DialogDescription>
           </DialogHeader>
 
+          {image && (
+            <div className="flex justify-center items-center w-full">
+              <img
+                src={image}
+                alt="Logo preview"
+                className="w-10 h-10 mt-1 rounded"
+              />
+            </div>
+          )}
+
           <div className="grid gap-4 py-4">
             {/* Basic Inputs */}
             <div className="grid gap-2">
@@ -144,6 +183,9 @@ export function SiteDialog({
                   value={siteLink}
                   onChange={(e) => setSiteLink(e.target.value)}
                 />
+                {isInvalidLink && (
+                  <Badge variant="destructive">Invalid URL</Badge>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="image">Site Image URL</Label>
@@ -167,11 +209,18 @@ export function SiteDialog({
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="ribonStyle">Ribbon Style</Label>
-                <Input
-                  id="ribonStyle"
-                  value={ribonStyle}
-                  onChange={(e) => setRibonStyle(e.target.value)}
-                />
+                <Select value={ribonStyle} onValueChange={setRibonStyle}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Theme" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="slant-up">slant-up</SelectItem>
+                    <SelectItem value="slant-down">slant-down</SelectItem>
+                    <SelectItem value="up">up</SelectItem>
+                    <SelectItem value="down">down</SelectItem>
+                    <SelectItem value="check">check</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
