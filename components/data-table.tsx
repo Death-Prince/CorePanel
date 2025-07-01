@@ -1,6 +1,9 @@
+// components/data-table.tsx
+
 "use client";
 
 import * as React from "react";
+import { SiteDialog } from "@/components/sitedialog";
 import {
   closestCenter,
   DndContext,
@@ -325,7 +328,7 @@ export function DataTable({
       columnFilters,
       pagination,
     },
-    getRowId: (row) => row.id.toString(),
+    getRowId: (row) => String(row.id),
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -419,10 +422,17 @@ export function DataTable({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant="outline" size="sm">
-            <IconPlus />
-            <span className="hidden lg:inline">Add New Site</span>
-          </Button>
+          <SiteDialog
+            mode="add"
+            onSubmit={(newSite) => {
+              setData((prev) => [...prev, newSite]); 
+            }}
+          >
+            <Button variant="outline" size="sm">
+              <IconPlus />
+              <span className="hidden lg:inline">Add New Site</span>
+            </Button>
+          </SiteDialog>
         </div>
       </div>
       <TabsContent

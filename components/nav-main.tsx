@@ -60,7 +60,7 @@ export function NavMain({
                       "w-full justify-start",
                       isActive
                         ? "bg-muted text-primary font-semibold"
-                        : "hover:bg-muted/70 text-muted-foreground"
+                        : "hover:bg-muted/50"
                     )}
                   >
                     {item.icon && <item.icon />}

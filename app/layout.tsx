@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { ToastProvider } from "@/components/toast-provider";
 
 export const metadata: Metadata = {
   title: "CorePanel",
@@ -20,6 +21,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <>
       <html lang="en" suppressHydrationWarning>
@@ -44,6 +46,7 @@ export default function RootLayout({
                 <div className="flex flex-1 flex-col">{children}</div>
               </SidebarInset>
             </SidebarProvider>
+            <ToastProvider />
           </ThemeProvider>
         </body>
       </html>
