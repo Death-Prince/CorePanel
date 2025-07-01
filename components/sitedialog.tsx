@@ -61,6 +61,7 @@ export function SiteDialog({
     e.preventDefault();
 
     const body = {
+      ...(isEdit && initialValues?.id ? { id: initialValues.id } : {}),
       site_name: siteName,
       site_link: siteLink,
       ribon_tooltip: tooltip,
@@ -72,11 +73,9 @@ export function SiteDialog({
     };
 
     const promise = async () => {
-      const endpoint =
-        mode === "edit" ? "/api/stackshelf/update" : "/api/stackshelf";
       const method = mode === "edit" ? "PUT" : "POST";
 
-      const res = await fetch(endpoint, {
+      const res = await fetch("/api/stackshelf", {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

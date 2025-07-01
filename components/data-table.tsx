@@ -96,6 +96,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DeleteDialog } from "@/components/DeleteDialog";
 
 export const schema = z.object({
   id: z.number(),
@@ -128,7 +129,9 @@ function DragHandle({ id }: { id: number }) {
   );
 }
 
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
+export const getColumns = (
+  setData: React.Dispatch<React.SetStateAction<z.infer<typeof schema>[]>>
+): ColumnDef<z.infer<typeof schema>>[] => [
   {
     id: "drag",
     header: () => null,
@@ -172,7 +175,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-      <div className="w-5">
+      <div className="w-16">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
           {row.original.category_name}
         </Badge>
@@ -186,10 +189,12 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       const svgHtml = row.original.access_category;
 
       return (
-        <div
-          className="w-8 h-8 text-right "
-          dangerouslySetInnerHTML={{ __html: svgHtml }}
-        />
+        <div className="w-16">
+          <div
+            className="w-8 h-8 text-right "
+            dangerouslySetInnerHTML={{ __html: svgHtml }}
+          />
+        </div>
       );
     },
   },
@@ -225,7 +230,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       const url = row.original.site_link;
 
       return (
-        <div className="w-32">
+        <div className="w-16">
           <a
             href={url}
             target="_blank"
@@ -240,7 +245,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     id: "actions",
-    cell: () => (
+    cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -253,11 +258,40 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
+          <SiteDialog
+            mode="edit"
+            initialValues={row.original}
+            onSubmit={(updatedSite) => {
+              setData((prev) =>
+                prev.map((site) =>
+                  site.id === updatedSite.id ? updatedSite : site
+                )
+              );
+            }}
+          >
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              Edit
+            </DropdownMenuItem>
+          </SiteDialog>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+          <DeleteDialog
+            trigger={
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={(e) => e.preventDefault()}
+              >
+                Delete
+              </DropdownMenuItem>
+            }
+            itemId={row.original.id}
+            itemName={row.original.site_name}
+            endpoint="/api/stackshelf"
+            onDeleted={() => {
+              setData((prev) =>
+                prev.filter((site) => site.id !== row.original.id)
+              );
+            }}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
     ),
@@ -295,6 +329,7 @@ export function DataTable({
   data: z.infer<typeof schema>[];
 }) {
   const [data, setData] = React.useState(() => initialData);
+  const columns = React.useMemo(() => getColumns(setData), [setData]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -425,7 +460,7 @@ export function DataTable({
           <SiteDialog
             mode="add"
             onSubmit={(newSite) => {
-              setData((prev) => [...prev, newSite]); 
+              setData((prev) => [...prev, newSite]);
             }}
           >
             <Button variant="outline" size="sm">
