@@ -45,8 +45,10 @@ export function DeleteDialog({
       toast.success(`${itemName || "Item"} deleted successfully.`);
       onDeleted();
       setOpen(false);
-    } catch (err: any) {
-      toast.error("Failed to delete item: " + err.message);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      toast.error("Failed to delete item: " + message);
     } finally {
       setLoading(false);
     }
