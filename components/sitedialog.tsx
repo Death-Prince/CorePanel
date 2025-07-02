@@ -118,6 +118,11 @@ export function SiteDialog({
 
       const data = await res.json();
 
+      const formatted = {
+        ...data.data,
+        id: data.data._id,
+      };
+
       setOpen(false);
       setSiteName("");
       setSiteLink("");
@@ -128,7 +133,7 @@ export function SiteDialog({
       setRibonStyle("");
       setRibonColor("");
 
-      onSubmit(data.data);
+      onSubmit(formatted);
       return data;
     };
 
@@ -233,9 +238,9 @@ export function SiteDialog({
                 id="accessCategory"
                 value={accessCategory}
                 onChange={(e) => setAccessCategory(e.target.value)}
+                className="max-h-32 overflow-auto"
               />
             </div>
-
             <div className="grid gap-2">
               <Label htmlFor="ribonColor">Ribbon Color</Label>
               <Input
@@ -252,6 +257,7 @@ export function SiteDialog({
                 id="tooltip"
                 value={tooltip}
                 onChange={(e) => setTooltip(e.target.value)}
+                className="max-h-32 overflow-auto"
               />
             </div>
           </div>

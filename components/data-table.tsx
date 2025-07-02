@@ -4,6 +4,7 @@
 
 import * as React from "react";
 import { SiteDialog } from "@/components/sitedialog";
+import { SiteScriptDialog } from "@/components/sitescriptdialog";
 import {
   closestCenter,
   DndContext,
@@ -35,6 +36,7 @@ import {
   IconLayoutColumns,
   // IconLoader,
   IconPlus,
+  IconPencilPlus,
   //   IconTrendingUp,
 } from "@tabler/icons-react";
 import {
@@ -172,6 +174,15 @@ export const getColumns = (
       return <TableCellViewer item={row.original} />;
     },
     enableHiding: false,
+  },
+  {
+    accessorKey: "ID",
+    header: "ID",
+    cell: ({ row }) => (
+      <Badge variant="outline" className="text-muted-foreground px-1.5">
+        {row.original.id}
+      </Badge>
+    ),
   },
   {
     accessorKey: "type",
@@ -402,11 +413,13 @@ export function DataTable({
         </Label>
         <Input
           placeholder="Filter by name..."
-          value={(table.getColumn("site_name")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("site_name")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("site_name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm me-2 text-sm h-8"
         />
 
         <div className="flex items-center gap-2">
@@ -454,6 +467,21 @@ export function DataTable({
               <span className="hidden lg:inline">Add New Site</span>
             </Button>
           </SiteDialog>
+
+          <SiteScriptDialog
+            onSubmit={(newSite) => {
+              setData((prev) => [...prev, newSite]);
+            }}
+          >
+            <Button
+              className="hidden lg:inline-flex"
+              variant="outline"
+              size="sm"
+            >
+              <IconPencilPlus />
+              Script
+            </Button>
+          </SiteScriptDialog>
         </div>
       </div>
       <TabsContent

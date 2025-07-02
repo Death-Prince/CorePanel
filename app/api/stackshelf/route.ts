@@ -24,6 +24,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const StackItem = await getStackItemModel();
 
+    if (Array.isArray(body)) {
+      const createdItems = await StackItem.insertMany(body);
+      return NextResponse.json({ success: true, data: createdItems });
+    }
+
     const created = await StackItem.create(body);
 
     return NextResponse.json({ success: true, data: created });
