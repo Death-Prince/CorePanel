@@ -83,6 +83,7 @@ export function SiteDialog({
       setIsInvalidLink(false);
     } catch (error) {
       setIsInvalidLink(true);
+      console.error("Invalid site link", error);
     }
   }, [siteLink]);
 
