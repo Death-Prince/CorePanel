@@ -45,7 +45,7 @@ export function SiteScriptDialog({
         throw new Error("Input must be an array of objects.");
       }
     } catch (err) {
-      toast.error("Invalid script format. Check syntax.");
+      toast.error("Invalid script format. Check syntax." + err);
       return;
     }
 
