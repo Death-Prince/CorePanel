@@ -171,6 +171,7 @@ export const getColumns = (
     header: "Name",
     cell: ({ row }) => {
       const name = row.getValue("site_name");
+      console.log(name)
       return <TableCellViewer item={row.original} />;
     },
     enableHiding: false,
