@@ -164,9 +164,11 @@ export const getColumns = (
     enableHiding: false,
   },
   {
-    accessorKey: "Name",
+    accessorKey: "site_name",
+    filterFn: "includesString",
     header: "Name",
     cell: ({ row }) => {
+      const name = row.getValue("site_name");
       return <TableCellViewer item={row.original} />;
     },
     enableHiding: false,
@@ -175,7 +177,7 @@ export const getColumns = (
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-     <div className="w-32 block truncate">
+      <div className="w-32 block truncate">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
           {row.original.category_name}
         </Badge>
@@ -398,31 +400,15 @@ export function DataTable({
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <Select defaultValue="outline">
-          <SelectTrigger
-            className="flex w-fit @4xl/main:hidden"
-            size="sm"
-            id="view-selector"
-          >
-            <SelectValue placeholder="Select a view" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="outline">Outline</SelectItem>
-            <SelectItem value="past-performance">Past Performance</SelectItem>
-            <SelectItem value="key-personnel">Key Personnel</SelectItem>
-            <SelectItem value="focus-documents">Focus Documents</SelectItem>
-          </SelectContent>
-        </Select>
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger value="outline">Outline</TabsTrigger>
-          <TabsTrigger value="past-performance">
-            Past Performance <Badge variant="secondary">3</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="key-personnel">
-            Key Personnel <Badge variant="secondary">2</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
-        </TabsList>
+        <Input
+          placeholder="Filter by name..."
+          value={(table.getColumn("site_name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("site_name")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -605,15 +591,6 @@ export function DataTable({
       </TabsContent>
       <TabsContent
         value="past-performance"
-        className="flex flex-col px-4 lg:px-6"
-      >
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-      </TabsContent>
-      <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-      </TabsContent>
-      <TabsContent
-        value="focus-documents"
         className="flex flex-col px-4 lg:px-6"
       >
         <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
