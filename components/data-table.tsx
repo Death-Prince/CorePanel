@@ -175,7 +175,7 @@ export const getColumns = (
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-      <div className="w-16">
+     <div className="w-32 block truncate">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
           {row.original.category_name}
         </Badge>
@@ -189,7 +189,7 @@ export const getColumns = (
       const svgHtml = row.original.access_category;
 
       return (
-        <div className="w-16">
+        <div className="w-32 block truncate">
           <div
             className="w-8 h-8 text-right "
             dangerouslySetInnerHTML={{ __html: svgHtml }}
@@ -202,8 +202,8 @@ export const getColumns = (
     accessorKey: "Description",
     header: "Description",
     cell: ({ row }) => (
-      <div className="w-32">
-        <Badge variant="secondary" className="text-muted-foreground px-1.5">
+      <div className="w-32 block truncate">
+        <Badge variant="secondary" className="text-muted-foreground px-1.5 ">
           {row.original.ribon_tooltip}
         </Badge>
       </div>
@@ -230,7 +230,7 @@ export const getColumns = (
       const url = row.original.site_link;
 
       return (
-        <div className="w-16">
+        <div className="w-32 block truncate">
           <a
             href={url}
             target="_blank"
