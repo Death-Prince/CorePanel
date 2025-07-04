@@ -102,6 +102,7 @@ export function SiteDialog({
             setImage(`${fallbackBase}default-icon.png`);
           }
         } catch (e) {
+          console.log(e);
           setImage(`${fallbackBase}default-icon.png`);
         }
       };
