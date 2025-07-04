@@ -78,8 +78,65 @@ export function SiteDialog({
       const url = new URL(siteLink);
       const domain = url.hostname;
 
-      const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
-      setImage(faviconUrl);
+      const googleFavicon = `https://www.google.com/s2/favicons?sz=256&domain=${domain}`;
+      const clearbitFavicon = `https://logo.clearbit.com/${domain}`;
+      const fallbackBase = "https://sitescapes.netlify.app/images/";
+      const scriptURL = "https://sitescapes.netlify.app/script.js";
+
+      const setFallbackFromScript = async () => {
+        try {
+          const response = await fetch(scriptURL);
+          const text = await response.text();
+
+          // Match the site_link and extract the site_image
+          const regex = new RegExp(
+            `{[^}]*['"]site_link['"]:\\s*['"]${siteLink}['"][^}]*['"]site_image['"]:\\s*['"]([^'"]+)['"]`,
+            "i"
+          );
+
+          const match = text.match(regex);
+          if (match && match[1]) {
+            const imageFromScript = `${fallbackBase}${match[1]}`;
+            setImage(imageFromScript);
+          } else {
+            setImage(`${fallbackBase}default-icon.png`);
+          }
+        } catch (e) {
+          setImage(`${fallbackBase}default-icon.png`);
+        }
+      };
+
+      const testImage = new Image();
+      testImage.src = googleFavicon;
+
+      testImage.onload = () => {
+        if (testImage.width >= 64) {
+          setImage(googleFavicon);
+        } else {
+          const clearbitImage = new Image();
+          clearbitImage.src = clearbitFavicon;
+
+          clearbitImage.onload = () => {
+            setImage(clearbitFavicon);
+          };
+          clearbitImage.onerror = () => {
+            setFallbackFromScript();
+          };
+        }
+      };
+
+      testImage.onerror = () => {
+        const clearbitImage = new Image();
+        clearbitImage.src = clearbitFavicon;
+
+        clearbitImage.onload = () => {
+          setImage(clearbitFavicon);
+        };
+        clearbitImage.onerror = () => {
+          setFallbackFromScript();
+        };
+      };
+
       setIsInvalidLink(false);
     } catch (error) {
       setIsInvalidLink(true);

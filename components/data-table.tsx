@@ -171,7 +171,7 @@ export const getColumns = (
     header: "Name",
     cell: ({ row }) => {
       const name = row.getValue("site_name");
-      console.log(name)
+      console.log(name);
       return <TableCellViewer item={row.original} />;
     },
     enableHiding: false,
@@ -189,7 +189,7 @@ export const getColumns = (
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-      <div className="w-32 block truncate">
+      <div className="w-16 block truncate">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
           {row.original.category_name}
         </Badge>
@@ -203,7 +203,7 @@ export const getColumns = (
       const svgHtml = row.original.access_category;
 
       return (
-        <div className="w-32 block truncate">
+        <div className="w-16 block truncate">
           <div
             className="w-8 h-8 text-right "
             dangerouslySetInnerHTML={{ __html: svgHtml }}
@@ -216,11 +216,12 @@ export const getColumns = (
     accessorKey: "Description",
     header: "Description",
     cell: ({ row }) => (
-      <div className="w-32 block truncate">
-        <Badge variant="secondary" className="text-muted-foreground px-1.5 ">
-          {row.original.ribon_tooltip}
-        </Badge>
-      </div>
+      <Badge
+        variant="secondary"
+        className="text-muted-foreground px-1.5 max-w-32 block truncate"
+      >
+        {row.original.ribon_tooltip}
+      </Badge>
     ),
   },
   // {

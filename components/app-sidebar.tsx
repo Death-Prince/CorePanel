@@ -3,8 +3,9 @@
 
 import * as React from "react";
 import { IconInnerShadowTop } from "@tabler/icons-react";
-import { navMain, navSecondary } from "@/config/nav";
+import { navMain, navSecondary, navMyProject } from "@/config/nav";
 import { NavMain } from "@/components/nav-main";
+import { NavMyProject } from "@/components/nav-MyProject";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import useAuth from "@/hooks/useAuth";
@@ -53,6 +54,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent>
         <NavMain items={navMain} />
+        <NavMyProject items={navMyProject} />
         <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
 
